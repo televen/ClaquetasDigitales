@@ -1,0 +1,3 @@
+.pepsimusics{background: url('../assets/bg.jpg'); width:1280px; height: 800px}
+.inputs_wrapper{position: absolute;top: 530px;left: 140px;}
+.inputs_wrapper input{height:40px;width: 1000px;font-size: 40px;line-height: 40px;text-align:center}
