@@ -5,4 +5,6 @@ $(function(){
 		$('.inputs_wrapper').hide();
 		$('.txt_wrapper').fadeIn();
 	});
+	
+	// 	$('window').bind('shake', eventHandler);
 });
