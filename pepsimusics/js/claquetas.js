@@ -5,6 +5,12 @@ $(function(){
 		$('.inputs_wrapper').hide();
 		$('.txt_wrapper').fadeIn();
 	});
-	
-	// 	$('window').bind('shake', eventHandler);
 });
+
+window.onload = function() {
+	window.addEventListener('shake', shakeEventDidOccur, false);
+	function shakeEventDidOccur () {
+		$('.txt_wrapper').hide();
+		$('.inputs_wrapper').fadeIn();
+	}
+};
