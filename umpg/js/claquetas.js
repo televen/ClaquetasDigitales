@@ -5,24 +5,61 @@ Contestant.prototype.dbname 		= 'televen::contestant';
 Contestant.prototype.dbversion 		= '1.0';
 Contestant.prototype.dbdescription 	= 'Contestants db. Will store all the casting data';
 Contestant.prototype.dbsize		 	= 5 * 1024 * 1024;
-Contestant.prototype.sql		 	= '';
+//Contestant.prototype.sql		 	= '';
 
 Contestant.prototype.init			= function(){
-	this.db = openDatabase(this.dbname, this.dbversion, this.dbdescription, this.dbsize);
-	if(this.db){
-		this.sql = "CREATE TABLE IF NOT EXISTS " + this.dbname + ".contestant(id INT PRIMARY KEY AUTOINCREMENT, ci INT, first_name TEXT, last_name TEXT, email TEXT, phone TEXT, twitter TEXT, city TEXT, game TEXT, code TEXT, timestamp REAL)";
-		this.db.transaction(
-		function(tx){
-			tx.executeSql(this.sql, [], this.success, this.showError);
-		});
-	}else{
-		console.error("Can't open Database televen::contestant");
+	try{
+		if(window.openDatabase){
+			this.db = openDatabase(this.dbname, this.dbversion, this.dbdescription, this.dbsize);
+			if(this.db){
+				sql = "CREATE TABLE IF NOT EXISTS contestant (id INTEGER PRIMARY KEY AUTOINCREMENT, ci INTEGER, first_name TEXT, last_name TEXT, email TEXT, phone TEXT, twitter TEXT, city TEXT, game TEXT, code TEXT, timestamp REAL)";
+				this.db.transaction(
+				function(tx){
+					tx.executeSql(
+					sql, 
+					[], 
+					function(tx, result){
+						return true;
+					}, 
+					function(tx, error){
+						console.error("Can't create table Contestant: [code:" + error.code + ", message:" + error.message + "]");
+						return false;
+					});
+				});
+			}else{
+				console.error("Can't open database televen::contestant");
+				return false;
+			}
+		}else{
+			console.error("OpenDatabase is not supported by your browser");
+			return false;
+		}
+	}catch(e){
+		console.error(e);
 		return false;
 	}
 }
 
 Contestant.prototype.add			= function(entry){
-	
+	if(this.db){
+		sql = "INSERT INTO contestant ('', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		this.db.transaction(
+		function(tx){
+			tx.executeSql(
+			sql, 
+			[entry.ci, entry.first_name, entry.last_name, entry.email, entry.phone, entry.twitter, entry.city, entry.game, entry.code, new Date().getTime()], 
+			function(tx, result){
+				return true;
+			}, 
+			function(tx, error){
+				console.error("Can't create table Contestant: [code:" + error.code + ", message:" + error.message + "]");
+				return false;
+			});
+		});
+	}else{
+		console.error("The database shutdown unexpectly. Please reload the page");
+		return false;
+	}
 }
 
 Contestant.prototype.showError		= function(error){
@@ -124,13 +161,30 @@ window.onload = function() {
 		$('.inputs_wrapper').fadeIn();
 	}
 };*/
-
+/*
 window.onload = function() {
 	var contestant = new Contestant();
 	contestant.init();
-}/*
+}*/
 
 $(function(){
 	var contestant = new Contestant();
 	contestant.init();
-});*/
+	
+	$('.show').click(function(){
+		var entry = {
+			ci 			: $('.ci').val(),
+			first_name 	: $('.first_name').val(),
+			last_name 	: $('.last_name').val(),
+			email 		: $('.email').val(),
+			phone 		: $('.phone').val(),
+			twitter		: $('.twitter').val(),
+			city		: $('.city').val(),
+			game		: $('.game').val(),
+			code		: hex_md5($('.ci').val())
+		};
+		contestant.add(entry);
+		$('.inputs_wrapper').hide();
+		$('.txt_wrapper').fadeIn();
+	});
+});
