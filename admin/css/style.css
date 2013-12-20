@@ -1,0 +1,7 @@
+html, .CD-wrapper{width:100%;height:100%;}
+.CD-wrapper .inner-half input{height: 50px;font-size: 40px;width: 500px;text-align: center;}
+.CD-wrapper .inner-half .input-group{height: 50px;font-size: 40px;width: 500px;}
+.input-group-btn{height: 50px;font-size: 40px;}
+.step-2{position:relative;height:100%;background:rgb(168,209,100)}
+.step-1{position:relative;height:100%;display:none;background:rgb(251,207,97)}
+.inner-half{position: absolute;top: 50%;margin-top: -50px;width: 100%;text-align: center;color: #fff;font-weight: bold;}
